@@ -11,62 +11,63 @@ public class PurchaseSystem : MonoBehaviour
 
     public Item[] items;
     public GameObject itemPrefab;
-    public Transform itemContainer;
+    public RectTransform content;
 
     public ItemDataParser dataParser;
 
-    public int gridSize = 3; 
     public float buttonSize = 50f;
     public float spacing = 10f;
 
     private void Start()
     {
         items = dataParser.List2Array();
-
-        ShuffleItems();
-
-        SpawnItems(gridSize * gridSize);
+        SpawnItems();
         UpdateMoneyDisplay(); 
     }
-    void ShuffleItems()
+
+
+    void SpawnItems()
     {
-        // 아이템 배열을 랜덤하게 섞음
-        for (int i = 0; i < items.Length; i++)
+        // Content의 RectTransform 컴포넌트 가져오기
+        RectTransform contentRectTransform = content.GetComponent<RectTransform>();
+
+        // Content의 상단을 기준으로 시작 위치 계산
+        float startX = -contentRectTransform.rect.width * 0.5f;
+        float startY = contentRectTransform.rect.height * 0.5f;
+
+        // content와 아이템 간 간격 추가
+        float gap = spacing * 3;
+
+        // 아이템을 배치할 Content의 높이 계산
+        float contentHeight = items.Length * (buttonSize + spacing) + gap;
+
+        // Content의 크기를 기존의 크기로 설정
+        content.sizeDelta = new Vector2(content.sizeDelta.x, Mathf.Max(content.sizeDelta.y, contentHeight));
+
+        Dictionary<Item, int> itemCountMap = new Dictionary<Item, int>(); // 각 아이템의 발생 횟수를 추적하기 위한 딕셔너리
+
+        foreach (Item item in items)
         {
-            int randomIndex = Random.Range(i, items.Length);
-            Item tempItem = items[randomIndex];
-            items[randomIndex] = items[i];
-            items[i] = tempItem;
-        }
-    }
+            float itemY = startY - (itemCountMap.Count * (buttonSize + spacing) + gap);
 
-    void SpawnItems(int itemCount)
-    {
-        float startX = -200f;
-        float startY = 80f;
+            int itemCount = Random.Range(1, 31); // 각 아이템의 개수를 1에서 30까지 랜덤하게 설정
 
-        for (int i = 0; i < itemCount; i++)
-        {
-            int row = i / gridSize;
-            int col = i % gridSize;
+            itemCountMap[item] = itemCount;
 
-            float rowY = startY - row * (buttonSize + spacing);
-            float colX = startX + col * (buttonSize + spacing);
+            Debug.Log(item.Item_ID + " 아이템 생성: " + itemCountMap[item]);
 
-            Item item = items[Random.Range(0, items.Length)]; // 랜덤하게 아이템 선택
-
-            GameObject itemGo = Instantiate(itemPrefab, itemContainer);
+            GameObject itemGo = Instantiate(itemPrefab, content);
 
             ItemUI itemUI = itemGo.GetComponent<ItemUI>();
 
-            itemUI.Setup(this, item);
+            itemUI.Setup(this, item, itemCountMap[item]); // 아이템 개수 전달
 
-            // 버튼의 위치 및 크기 설정
             RectTransform rectTransform = itemGo.GetComponent<RectTransform>();
             rectTransform.sizeDelta = new Vector2(buttonSize, buttonSize);
-            rectTransform.anchoredPosition = new Vector2(colX, rowY);
+            rectTransform.anchoredPosition = new Vector2(startX, itemY);
         }
     }
+
 
     public void PurchaseItem(Item item)
     {
