@@ -9,10 +9,23 @@ public class ItemUI : MonoBehaviour
     public Text priceText;
     public Text numText;
 
+    public Button rejectButton;
+    public Color activeColor = Color.gray;
+    public Color inactiveColor = Color.red;
+    public bool isOn = false;
+
     private PurchaseSystem purchaseSystem;
     private Item item;
     private int initialItemCount;
     private int itemCount;
+    
+
+
+    private void Start()
+    {
+        RejectButtonClick();
+    }
+
 
     public void Setup(PurchaseSystem system, Item newItem, int initialItemCount)
     {
@@ -41,6 +54,21 @@ public class ItemUI : MonoBehaviour
             UpdateNumText();
         }
     }
+
+    public void RejectButtonClick()
+    {
+        isOn = !isOn;
+
+        if(!isOn)
+        {
+            rejectButton.image.color = activeColor;
+        }
+        else
+        {
+            rejectButton.image.color = inactiveColor;
+        }
+    }
+
 
     private void UpdateNumText()
     {
