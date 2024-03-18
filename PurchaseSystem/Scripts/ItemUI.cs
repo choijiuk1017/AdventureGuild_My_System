@@ -8,16 +8,20 @@ public class ItemUI : MonoBehaviour
     public Text itemNameText;
     public Text priceText;
     public Text numText;
+    public Text marketPrice;
 
     public Button rejectButton;
     public Color activeColor = Color.gray;
     public Color inactiveColor = Color.red;
     public bool isOn = false;
+    public int itemCount;
+
+    public Item item;
 
     private PurchaseSystem purchaseSystem;
-    private Item item;
+    
     private int initialItemCount;
-    private int itemCount;
+    
     
 
 
@@ -32,6 +36,7 @@ public class ItemUI : MonoBehaviour
         purchaseSystem = system;
         item = newItem;
         itemNameText.text = newItem.Item_Name;
+        marketPrice.text = newItem.Item_Price_Def.ToString();
         this.initialItemCount = initialItemCount;
         itemCount = initialItemCount;
         UpdateNumText();

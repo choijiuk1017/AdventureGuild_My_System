@@ -877,7 +877,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC2DC\uC7A5 \uB9E4\uC785\uAC00\n"
+  m_Text: "\uD604\uC7AC \uB9E4\uC785\uAC00\n"
 --- !u!1 &7257556467132571267
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,6 +1014,7 @@ MonoBehaviour:
   itemNameText: {fileID: 7870837009503814531}
   priceText: {fileID: 6169293555303467493}
   numText: {fileID: 8190272296896147478}
+  marketPrice: {fileID: 6169293555303467493}
   rejectButton: {fileID: 6753272386155076409}
   activeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   inactiveColor: {r: 1, g: 0, b: 0, a: 1}
