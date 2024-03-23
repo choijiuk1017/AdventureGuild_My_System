@@ -562,7 +562,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5999.4, y: -2393.7}
+  m_AnchoredPosition: {x: -5871552.5, y: 2342690}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &657058427
@@ -577,6 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70200a5902241574e8e5c3c67092b62a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  csvData: {fileID: 0}
   items: []
   events: []
   itemData: {fileID: 4900000, guid: 28562377ea1168c48b18cfc39132158f, type: 3}
@@ -972,11 +973,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moneyText: {fileID: 441324777}
   priceText: {fileID: 1899822053}
-  money: 10000000
+  money: 100000
   items: []
   itemPrefab: {fileID: 7917273145167442693, guid: 4e8857db4260fc945bd131281e267098, type: 3}
   content: {fileID: 1546866866}
   dataParser: {fileID: 657058427}
+  itemData: {fileID: 4900000, guid: 28562377ea1168c48b18cfc39132158f, type: 3}
   buttonSize: 50
   spacing: 10
   itemsPrice: 0
@@ -1014,7 +1016,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.003217593}
+  m_AnchoredPosition: {x: 0, y: 0.00035525791}
   m_SizeDelta: {x: 0.00031613535, y: 200}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1812940878
@@ -1101,7 +1103,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 819440076}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999204
+  m_Size: 0.99996054
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

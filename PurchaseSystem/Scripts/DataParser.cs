@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Reflection;
 
 //현재 이 코드는 비효율적임, 추후에 바꿀 예정
 
 public class DataParser : MonoBehaviour
-{
+{ 
+
+    public TextAsset csvData;
+
     public List<Item> items = new List<Item>();
     public List<ItemEvents> events = new List<ItemEvents>();
 
@@ -51,11 +55,33 @@ public class DataParser : MonoBehaviour
         return parsedData;
     }
 
+    //void ParseData(List<List<string>> csvData)
+    //{
+    //    foreach (List<string> rowData in csvData)
+    //    {
+    //        T parsedObject = Activator.CreateInstance<T>();
+
+    //        FieldInfo[] fields = typeof(T).GetFields(); // 클래스의 모든 public 필드 가져오기
+
+    //        for (int i = 0; i < Math.Min(fields.Length, rowData.Count); i++)
+    //        {
+    //            string fieldValue = rowData[i];
+    //            FieldInfo field = fields[i];
+
+    //            // 필드 타입에 맞게 데이터 변환
+    //            object parsedValue = Convert.ChangeType(fieldValue, field.FieldType);
+    //            field.SetValue(parsedObject, parsedValue);
+    //        }
+
+    //        data.Add(parsedObject);
+    //    }
+    //}
+
     void ParseItemData(List<List<string>> csvData)
     {
         foreach (List<string> rowData in csvData)
         {
-            if (rowData.Count >= 5) 
+            if (rowData.Count >= 5)
             {
                 Item newItem = new Item();
 
@@ -68,7 +94,7 @@ public class DataParser : MonoBehaviour
                 newItem.Item_Price_Def = float.TryParse(rowData[5], out float defPrice) ? defPrice : 0;
                 newItem.Item_Price_Min = float.TryParse(rowData[6], out float minPrice) ? minPrice : 0;
                 newItem.Item_Price_Max = float.TryParse(rowData[7], out float maxPrice) ? maxPrice : 0;
-                
+
 
                 // 생성된 아이템 객체를 리스트에 추가
                 items.Add(newItem);
@@ -93,15 +119,15 @@ public class DataParser : MonoBehaviour
             newEvent.Event_Sub_Type = int.TryParse(rowData[3], out int subType) ? subType : 0;
             newEvent.Event_Detail_Type = int.TryParse(rowData[4], out int detailType) ? detailType : 0;
             newEvent.Event_Script = rowData[5];
-            newEvent.Event_Precede = int.TryParse(rowData[4], out int precede) ? precede : 0;
-            newEvent.Event_Prob = int.TryParse(rowData[4], out int prob) ? prob : 0;
-
+            newEvent.Event_Precede = int.TryParse(rowData[5], out int precede) ? precede : 0;
+            newEvent.Event_Prob = int.TryParse(rowData[6], out int prob) ? prob : 0;
+             
 
             // 생성된 아이템 객체를 리스트에 추가
             events.Add(newEvent);
 
             Debug.LogWarning("잘됨");
-            
+
         }
     }
 

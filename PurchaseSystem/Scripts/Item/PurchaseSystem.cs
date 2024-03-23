@@ -11,10 +11,13 @@ public class PurchaseSystem : MonoBehaviour
     public float money;
 
     public Item[] items;
+
     public GameObject itemPrefab;
     public RectTransform content;
 
     public DataParser dataParser;
+
+    public TextAsset itemData;
 
     public float buttonSize = 50f;
     public float spacing = 10f;
@@ -25,6 +28,7 @@ public class PurchaseSystem : MonoBehaviour
     private void Start()
     {
         items = dataParser.List2Array<Item>(dataParser.items);
+
         SpawnItems();
         UpdateMoneyDisplay(); 
     }
@@ -33,6 +37,7 @@ public class PurchaseSystem : MonoBehaviour
     {
         CalculateTotalPrice();
     }
+
 
 
     void SpawnItems()
@@ -132,7 +137,7 @@ public class PurchaseSystem : MonoBehaviour
         moneyText.text = "¼ÒÁö±Ý: " + money.ToString();
     }
 
-    public void AdjustPrices(float factor, int array)
+    public void ChangePrices(float factor, int array)
     {
         items[array].Item_Price_Def = items[array].Item_Price_Def * factor;
 
@@ -143,4 +148,5 @@ public class PurchaseSystem : MonoBehaviour
 
         CalculateTotalPrice();
     }
+
 }
