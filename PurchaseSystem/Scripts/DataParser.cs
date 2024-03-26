@@ -119,8 +119,9 @@ public class DataParser : MonoBehaviour
             newEvent.Event_Sub_Type = int.TryParse(rowData[3], out int subType) ? subType : 0;
             newEvent.Event_Detail_Type = int.TryParse(rowData[4], out int detailType) ? detailType : 0;
             newEvent.Event_Script = rowData[5];
-            newEvent.Event_Precede = int.TryParse(rowData[5], out int precede) ? precede : 0;
-            newEvent.Event_Prob = int.TryParse(rowData[6], out int prob) ? prob : 0;
+            newEvent.Event_Precede = int.TryParse(rowData[6], out int precede) ? precede : 0;
+            newEvent.Event_Prob = int.TryParse(rowData[7], out int prob) ? prob : 0;
+            newEvent.Reset_Event = int.TryParse(rowData[8], out int reset) ? reset : 0;
              
 
             // 생성된 아이템 객체를 리스트에 추가

@@ -581,7 +581,7 @@ MonoBehaviour:
   items: []
   events: []
   itemData: {fileID: 4900000, guid: 28562377ea1168c48b18cfc39132158f, type: 3}
-  eventData: {fileID: 4900000, guid: 4daf5f1caf4b1c641a423d5825d0c650, type: 3}
+  eventData: {fileID: 4900000, guid: 10c8e60c3f7cb574480c91c49d7b82e6, type: 3}
 --- !u!1 &668750106
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,7 +767,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de26da01469bd104890143fd8109f9e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEvent: 0
   events: []
   items: []
   purchaseSystem: {fileID: 1387124515}
@@ -1016,7 +1015,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00035525791}
+  m_AnchoredPosition: {x: 0, y: -0.000009536743}
   m_SizeDelta: {x: 0.00031613535, y: 200}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1812940878
@@ -1102,8 +1101,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 819440077}
   m_HandleRect: {fileID: 819440076}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.99996054
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

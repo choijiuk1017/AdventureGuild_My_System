@@ -137,13 +137,22 @@ public class PurchaseSystem : MonoBehaviour
         moneyText.text = "¼ÒÁö±Ý: " + money.ToString();
     }
 
-    public void ChangePrices(float factor, int array)
+    public void ChangePrices(float factor, int itemID)
     {
-        items[array].Item_Price_Def = items[array].Item_Price_Def * factor;
+        foreach (Item item in items)
+        {
+            if (item.Item_ID == itemID)
+            {
+                item.Item_Price_Def *= factor;
 
-        ItemUI itemUI = FindItemUI(items[array]);
-
-        itemUI.UpdatePrice(items[array].Item_Price_Def);
+                ItemUI itemUI = FindItemUI(item);
+                if (itemUI != null)
+                {
+                    itemUI.UpdatePrice(item.Item_Price_Def);
+                }
+                break; 
+            }
+        }
 
 
         CalculateTotalPrice();

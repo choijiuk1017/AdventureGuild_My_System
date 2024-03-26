@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class EventSystem : MonoBehaviour
 {
-    public bool isEvent;
-
     public ItemEvents[] events;
     public Item[] items;
 
@@ -15,7 +13,8 @@ public class EventSystem : MonoBehaviour
     private float timeSinceLastEvent = 0f;
     private float eventInterval = 7f;
 
-    private List<int> usedEventIndices = new List<int>(); // 사용된 이벤트 인덱스를 추적
+    private HashSet<int> usedEventIndices = new HashSet<int>(); //중복된 값을 허용하지 않기 위해 HashSet 사용
+
 
     // Start is called before the first frame update
     void Start()
@@ -37,34 +36,51 @@ public class EventSystem : MonoBehaviour
 
     private void TriggerRandomEvent()
     {
-        int randomIndex;
-        do
-        {
-            randomIndex = RandomEventIndex();
-        } while (usedEventIndices.Contains(randomIndex));
+        List<int> availableEventIndices = new List<int>();
 
-        if (events[randomIndex].Event_Precede != 0 && !usedEventIndices.Contains(events[randomIndex].Event_Precede))
+        for (int i = 0; i < events.Length; i++)
         {
-            // 선행 이벤트가 존재하고 실행되지 않았을 경우
-            ActiveEvent(events[randomIndex].Event_Precede);
-            usedEventIndices.Add(events[randomIndex].Event_Precede);
+            if (!usedEventIndices.Contains(i))
+            {
+                if(events[i].Event_Precede != 0 && !usedEventIndices.Contains(events[i].Event_Precede))
+                {
+                    availableEventIndices.Add(events[i].Event_Precede);
+                }
+                else
+                {
+                    availableEventIndices.Add(i);
+                }
+            }
+                
+        }
+
+        if (availableEventIndices.Count > 0)
+        {
+            int randomIndex = Random.Range(0, availableEventIndices.Count);
+            int eventIndex = availableEventIndices[randomIndex];
+
+            // 중복되는 이벤트 방지를 위해 사용된 이벤트로 기록
+            usedEventIndices.Add(eventIndex);
+
+            // 이벤트 활성화
+            ActiveEvent(eventIndex);
+
+            int resetEventID = events[eventIndex].Reset_Event;
+            if(resetEventID != 0)
+            {
+                for(int i = 0; i <events.Length; i++)
+                {
+                   if (events[i].Event_ID == resetEventID && usedEventIndices.Contains(i))
+                    {
+                        usedEventIndices.Remove(i);
+                        break;
+                    }
+                }
+            }
         }
         else
         {
-            ActiveEvent(randomIndex);
-            usedEventIndices.Add(randomIndex);
-        }
-    }
-
-    private int RandomEventIndex()
-    {
-        if (events.Length > 0)
-        {
-            return Random.Range(0, events.Length);
-        }
-        else
-        {
-            return -1; // 이벤트 배열이 비어있을 경우 -1을 반환하거나 적절한 처리를 수행합니다.
+            Debug.LogWarning("모든 이벤트가 사용되었습니다.");
         }
     }
 
@@ -75,6 +91,9 @@ public class EventSystem : MonoBehaviour
         {
 
             Debug.Log(events[eventNum].Event_Script);
+
+            Debug.Log("메인타입" + events[eventNum].Event_Main_Type);
+            Debug.Log("서브타입" + events[eventNum].Event_Sub_Type);
 
             if (events[eventNum].Event_Main_Type == 1)
             {

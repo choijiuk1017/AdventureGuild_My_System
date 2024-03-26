@@ -10,4 +10,5 @@ public class ItemEvents
     public string Event_Script;
     public int Event_Precede;
     public int Event_Prob;
+    public int Reset_Event;
 }
