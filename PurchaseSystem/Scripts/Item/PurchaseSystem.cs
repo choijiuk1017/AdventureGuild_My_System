@@ -27,10 +27,21 @@ public class PurchaseSystem : MonoBehaviour
 
     private void Start()
     {
-        items = dataParser.List2Array<Item>(dataParser.items);
-
-        SpawnItems();
-        UpdateMoneyDisplay(); 
+        GameObject dataParserObject = GameObject.Find("DataParser");
+        if (dataParserObject != null)
+        {
+            dataParser = dataParserObject.GetComponent<DataParser>();
+            if (dataParser != null)
+            {
+                items = dataParser.List2Array<Item>(dataParser.items);
+                SpawnItems();
+                UpdateMoneyDisplay();
+            }
+            else
+            {
+                Debug.LogError("DataParser 컴포넌트를 찾을 수 없습니다.");
+            }
+        }
     }
 
     private void Update()
