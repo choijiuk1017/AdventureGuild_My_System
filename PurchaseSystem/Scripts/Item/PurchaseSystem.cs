@@ -15,9 +15,7 @@ public class PurchaseSystem : MonoBehaviour
     public GameObject itemPrefab;
     public RectTransform content;
 
-    public DataParser dataParser;
-
-    public TextAsset itemData;
+    public ItemSetting itemSetting;
 
     public float buttonSize = 50f;
     public float spacing = 10f;
@@ -27,21 +25,24 @@ public class PurchaseSystem : MonoBehaviour
 
     private void Start()
     {
-        GameObject dataParserObject = GameObject.Find("DataParser");
-        if (dataParserObject != null)
+        GameObject itemSettingObject = GameObject.Find("ItemManager");
+        itemSetting = itemSettingObject.GetComponent<ItemSetting>();
+
+        StartCoroutine(WaitForItemSetting(itemSetting));
+    }
+
+    IEnumerator WaitForItemSetting(ItemSetting itemSetting)
+    {
+        // ItemSetting 클래스에서 아이템 리스트가 설정될 때까지 대기
+        while (itemSetting.items == null)
         {
-            dataParser = dataParserObject.GetComponent<DataParser>();
-            if (dataParser != null)
-            {
-                items = dataParser.List2Array<Item>(dataParser.items);
-                SpawnItems();
-                UpdateMoneyDisplay();
-            }
-            else
-            {
-                Debug.LogError("DataParser 컴포넌트를 찾을 수 없습니다.");
-            }
+            yield return null;
         }
+
+        // 아이템 리스트가 설정된 후에 아이템을 스폰하고 화면 갱신
+        items = itemSetting.items;
+        SpawnItems();
+        UpdateMoneyDisplay();
     }
 
     private void Update()
@@ -94,9 +95,10 @@ public class PurchaseSystem : MonoBehaviour
         // 초기화
         totalPrice = 0;
 
-        foreach (Item item in items)
+        foreach (Item item in itemSetting.items)
         {
             ItemUI itemUI = FindItemUI(item); // 해당 아이템에 대한 ItemUI를 찾습니다.
+            itemUI.UpdatePrice(item.Item_Price_Def);
             if (itemUI != null && itemUI.isOn)
             {
                 itemsPrice = itemUI.itemCount* item.Item_Price_Def;
@@ -148,25 +150,16 @@ public class PurchaseSystem : MonoBehaviour
         moneyText.text = "소지금: " + money.ToString();
     }
 
-    public void ChangePrices(float factor, int itemID)
+    private void OnDestroy()
     {
-        foreach (Item item in items)
-        {
-            if (item.Item_ID == itemID)
-            {
-                item.Item_Price_Def *= factor;
-
-                ItemUI itemUI = FindItemUI(item);
-                if (itemUI != null)
-                {
-                    itemUI.UpdatePrice(item.Item_Price_Def);
-                }
-                break; 
-            }
-        }
-
-
-        CalculateTotalPrice();
+        // 스크립트가 소멸될 때 핸들러 제거
+        ItemSetting.OnPriceChanged -= HandlePriceChanged;
     }
 
+    private void HandlePriceChanged()
+    {
+        Debug.Log("가격 변동됨");
+        // 가격이 변경되었을 때 호출되는 함수
+        CalculateTotalPrice();
+    }
 }

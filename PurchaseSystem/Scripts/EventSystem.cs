@@ -7,7 +7,7 @@ public class EventSystem : MonoBehaviour
     public ItemEvents[] events;
     public Item[] items;
 
-    public PurchaseSystem purchaseSystem;
+    public ItemSetting itemSetting;
     public DataParser dataParser;
 
     private float timeSinceLastEvent = 0f;
@@ -15,8 +15,6 @@ public class EventSystem : MonoBehaviour
 
     private HashSet<int> usedEventIndices = new HashSet<int>(); //중복된 값을 허용하지 않기 위해 HashSet 사용
 
-
-    private List<EventEffect> pendingEventEffects = new List<EventEffect>();
 
 
     // Start is called before the first frame update
@@ -37,7 +35,11 @@ public class EventSystem : MonoBehaviour
                 Debug.LogError("DataParser 컴포넌트를 찾을 수 없습니다.");
             }
         }
-   
+
+        GameObject itemSettingObject = GameObject.Find("ItemManager");
+
+        itemSetting = itemSettingObject.GetComponent<ItemSetting>();
+
     }
 
     // Update is called once per frame
@@ -49,26 +51,7 @@ public class EventSystem : MonoBehaviour
             timeSinceLastEvent = 0f;
             TriggerRandomEvent();
         }
-        if (purchaseSystem == null)
-        {
-            GameObject purchaseSystemObject = GameObject.Find("PurchasePanel(Clone)");
-            if (purchaseSystemObject != null)
-            {
-                purchaseSystem = purchaseSystemObject.GetComponent<PurchaseSystem>();
-                if (purchaseSystem != null)
-                {
-                    ApplyPendingEventEffects();
-                }
-            }
-            else
-            {
-                return;
-            }
-        }
-        else
-        {
-            ApplyPendingEventEffects();
-        }
+
     }
 
     private void TriggerRandomEvent()
@@ -79,7 +62,7 @@ public class EventSystem : MonoBehaviour
         {
             if (!usedEventIndices.Contains(i))
             {
-                if(events[i].Event_Precede != 0 && !usedEventIndices.Contains(events[i].Event_Precede))
+                if (events[i].Event_Precede != 0 && !usedEventIndices.Contains(events[i].Event_Precede))
                 {
                     availableEventIndices.Add(events[i].Event_Precede);
                 }
@@ -88,7 +71,7 @@ public class EventSystem : MonoBehaviour
                     availableEventIndices.Add(i);
                 }
             }
-                
+
         }
 
         if (availableEventIndices.Count > 0)
@@ -103,11 +86,11 @@ public class EventSystem : MonoBehaviour
             ActiveEvent(eventIndex);
 
             int resetEventID = events[eventIndex].Reset_Event;
-            if(resetEventID != 0)
+            if (resetEventID != 0)
             {
-                for(int i = 0; i <events.Length; i++)
+                for (int i = 0; i < events.Length; i++)
                 {
-                   if (events[i].Event_ID == resetEventID && usedEventIndices.Contains(i))
+                    if (events[i].Event_ID == resetEventID && usedEventIndices.Contains(i))
                     {
                         usedEventIndices.Remove(i);
                         break;
@@ -121,7 +104,7 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    
+
 
 
     public void ActiveEvent(int eventNum)
@@ -134,12 +117,12 @@ public class EventSystem : MonoBehaviour
             if (events[eventNum].Event_Main_Type == 1)
             {
                 float increaseAmount = 1f + events[eventNum].Event_Detail_Type / 100f;
-                RecordEventEffect(increaseAmount, events[eventNum].Event_Sub_Type);
+                itemSetting.ChangePrices(increaseAmount, events[eventNum].Event_Sub_Type);
             }
             else if (events[eventNum].Event_Main_Type == 2)
             {
                 float decreaseAmount = 1f - events[eventNum].Event_Detail_Type / 100f;
-                RecordEventEffect(decreaseAmount, events[eventNum].Event_Sub_Type);
+                itemSetting.ChangePrices(decreaseAmount, events[eventNum].Event_Sub_Type);
             }
             else
             {
@@ -152,36 +135,4 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    // 이벤트 효과를 저장하고, PurchaseSystem이 생성되면 적용
-    private void RecordEventEffect(float priceChangeAmount, int itemIndex)
-    {
-        Debug.Log(priceChangeAmount + "," + itemIndex);
-        pendingEventEffects.Add(new EventEffect(priceChangeAmount, itemIndex));
-    }
-
-    // UI가 팝업이 열려 있을 때에만 변동사항을 적용
-    public void ApplyPendingEventEffects()
-    {
-        if (purchaseSystem != null)
-        {
-            foreach (var effect in pendingEventEffects)
-            {
-                purchaseSystem.ChangePrices(effect.PriceChangeAmount, effect.ItemIndex);
-            }
-            pendingEventEffects.Clear(); // 적용한 이벤트 효과 삭제
-        }
-    }
-
-    // 이벤트 효과 클래스
-    private class EventEffect
-    {
-        public float PriceChangeAmount { get; }
-        public int ItemIndex { get; }
-
-        public EventEffect(float priceChangeAmount, int itemIndex)
-        {
-            PriceChangeAmount = priceChangeAmount;
-            ItemIndex = itemIndex;
-        }
-    }
 }
