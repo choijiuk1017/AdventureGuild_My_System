@@ -9,6 +9,7 @@ public class ItemUI : MonoBehaviour
     public Text priceText;
     public Text numText;
     public Text marketPrice;
+    public Text purchasePrice;
 
     public Button rejectButton;
     public Color activeColor = Color.gray;
@@ -21,8 +22,8 @@ public class ItemUI : MonoBehaviour
     private PurchaseSystem purchaseSystem;
     
     private int initialItemCount;
-    
-    
+
+    public InputField priceInputField;
 
 
     private void Start()
@@ -83,5 +84,21 @@ public class ItemUI : MonoBehaviour
     public void UpdatePrice(float newPrice)
     {
         priceText.text = newPrice.ToString();
+    }
+
+    public void UpdatePriceFromInput()
+    {
+        if (!string.IsNullOrEmpty(priceInputField.text))
+        {
+            float newPrice;
+            if (float.TryParse(priceInputField.text, out newPrice))
+            {
+                purchasePrice.text = newPrice.ToString();
+            }
+            else
+            {
+                Debug.LogError("Invalid price input!");
+            }
+        }
     }
 }

@@ -10,8 +10,7 @@ public class EventSystem : MonoBehaviour
     public ItemSetting itemSetting;
     public DataParser dataParser;
 
-    private float timeSinceLastEvent = 0f;
-    private float eventInterval = 7f;
+
 
     private HashSet<int> usedEventIndices = new HashSet<int>(); //중복된 값을 허용하지 않기 위해 HashSet 사용
 
@@ -40,21 +39,18 @@ public class EventSystem : MonoBehaviour
 
         itemSetting = itemSettingObject.GetComponent<ItemSetting>();
 
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        timeSinceLastEvent += Time.deltaTime;
-        if (timeSinceLastEvent >= eventInterval)
-        {
-            timeSinceLastEvent = 0f;
-            TriggerRandomEvent();
-        }
+ 
 
     }
 
-    private void TriggerRandomEvent()
+
+    public void TriggerRandomEvent()
     {
         List<int> availableEventIndices = new List<int>();
 
@@ -62,45 +58,39 @@ public class EventSystem : MonoBehaviour
         {
             if (!usedEventIndices.Contains(i))
             {
-                if (events[i].Event_Precede != 0 && !usedEventIndices.Contains(events[i].Event_Precede))
-                {
-                    availableEventIndices.Add(events[i].Event_Precede);
-                }
-                else
-                {
-                    availableEventIndices.Add(i);
-                }
+                availableEventIndices.Add(i);
             }
-
         }
 
-        if (availableEventIndices.Count > 0)
+        int randomIndex = Random.Range(0, availableEventIndices.Count);
+        int eventIndex = availableEventIndices[randomIndex];
+
+        if(events[eventIndex].Event_Precede != 0)
         {
-            int randomIndex = Random.Range(0, availableEventIndices.Count);
-            int eventIndex = availableEventIndices[randomIndex];
+            usedEventIndices.Add(events[eventIndex].Event_Precede);
 
-            // 중복되는 이벤트 방지를 위해 사용된 이벤트로 기록
-            usedEventIndices.Add(eventIndex);
-
-            // 이벤트 활성화
-            ActiveEvent(eventIndex);
-
-            int resetEventID = events[eventIndex].Reset_Event;
-            if (resetEventID != 0)
-            {
-                for (int i = 0; i < events.Length; i++)
-                {
-                    if (events[i].Event_ID == resetEventID && usedEventIndices.Contains(i))
-                    {
-                        usedEventIndices.Remove(i);
-                        break;
-                    }
-                }
-            }
+            ActiveEvent(events[eventIndex].Event_Precede);
         }
         else
         {
-            Debug.LogWarning("모든 이벤트가 사용되었습니다.");
+
+            usedEventIndices.Add(eventIndex);
+
+            ActiveEvent(eventIndex);
+        }
+        
+
+        int resetEventID = events[eventIndex].Reset_Event;
+        if (resetEventID != 0)
+        {
+            for (int i = 0; i < events.Length; i++)
+            {
+                if (events[i].Event_ID == resetEventID && usedEventIndices.Contains(i))
+                {
+                    usedEventIndices.Remove(i);
+                    break;
+                }
+            }
         }
     }
 

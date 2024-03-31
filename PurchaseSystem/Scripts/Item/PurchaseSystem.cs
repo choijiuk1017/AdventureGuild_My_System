@@ -94,21 +94,28 @@ public class PurchaseSystem : MonoBehaviour
     {
         // 초기화
         totalPrice = 0;
+        
 
         foreach (Item item in itemSetting.items)
         {
             ItemUI itemUI = FindItemUI(item); // 해당 아이템에 대한 ItemUI를 찾습니다.
             itemUI.UpdatePrice(item.Item_Price_Def);
-            if (itemUI != null && itemUI.isOn)
+            float purchasePrice;
+            if (!string.IsNullOrEmpty(itemUI.purchasePrice.text) && float.TryParse(itemUI.purchasePrice.text, out purchasePrice))
             {
-                itemsPrice = itemUI.itemCount* item.Item_Price_Def;
-                // 각 아이템의 가격을 곱하여 총 가격에 추가합니다.
-                totalPrice += itemsPrice;
+                if (itemUI != null && itemUI.isOn)
+                {
+                    itemsPrice = itemUI.itemCount * purchasePrice;
+                    // 각 아이템의 가격을 곱하여 총 가격에 추가합니다.
+                    totalPrice += itemsPrice;
+                }
+                if (!itemUI.isOn)
+                {
+                    itemsPrice = 0;
+                }
             }
-            if(!itemUI.isOn)
-            {
-                itemsPrice = 0;
-            }    
+            
+            
         }
 
         // 총 가격을 화면에 표시합니다.
