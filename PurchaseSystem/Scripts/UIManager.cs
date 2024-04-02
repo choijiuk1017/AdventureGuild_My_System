@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//각 시스템의 UI를 관리하는 스크립트
 public class UIManager : MonoBehaviour
 {
     public List<GameObject> panelPrefabs = new List<GameObject>();
     public Canvas canvas; // 패널이 생성될 캔버스
 
-    // 패널을 생성하고 활성화하는 함수
+    // 패널을 생성하고 활성화하는 함수, 각 패널들을 불러올 버튼의 클릭 함수로 적용 
     public void ShowPanel(int panelIndex)
     {
         // 인덱스에 해당하는 패널 프리팹 가져오기

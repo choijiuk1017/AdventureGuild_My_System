@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Reflection;
 
 //현재 이 코드는 비효율적임, 추후에 바꿀 예정
-
+//데이터 파싱 코드
 public class DataParser : MonoBehaviour
 { 
 

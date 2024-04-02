@@ -1,5 +1,6 @@
 [System.Serializable]
 
+//이벤트의 정보를 담을 스크립트
 public class ItemEvents
 {
     public int Event_ID;
