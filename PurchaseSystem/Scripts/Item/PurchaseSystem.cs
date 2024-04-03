@@ -21,8 +21,6 @@ public class PurchaseSystem : MonoBehaviour
     //총 가격 저장 변수
     public float totalPrice;
 
-
-    public Item[] items;
     public ItemSetting itemSetting;
 
     //아이템 UI 프리펩
@@ -40,23 +38,11 @@ public class PurchaseSystem : MonoBehaviour
         GameObject itemSettingObject = GameObject.Find("ItemManager");
         itemSetting = itemSettingObject.GetComponent<ItemSetting>();
 
-        StartCoroutine(WaitForItemSetting(itemSetting));
-    }
-
-    //아이템 리스트를 ItemSetting으로부터 받아오는 코루틴
-    IEnumerator WaitForItemSetting(ItemSetting itemSetting)
-    {
-        // ItemSetting 클래스에서 아이템 리스트가 설정될 때까지 대기
-        while (itemSetting.items == null)
-        {
-            yield return null;
-        }
-
-        // 아이템 리스트가 설정된 후에 아이템을 스폰하고 화면 갱신
-        items = itemSetting.items;
         SpawnItems();
         UpdateMoneyDisplay();
     }
+
+
 
     private void Update()
     {
@@ -74,13 +60,13 @@ public class PurchaseSystem : MonoBehaviour
 
         float gap = spacing * 3;
 
-        float contentHeight = items.Length * (buttonSize + spacing) + gap;
+        float contentHeight = itemSetting.itemList.Count * (buttonSize + spacing) + gap;
 
         content.sizeDelta = new Vector2(content.sizeDelta.x, Mathf.Max(content.sizeDelta.y, contentHeight));
 
         Dictionary<Item, int> itemCountMap = new Dictionary<Item, int>();
 
-        foreach (Item item in items)
+        foreach (Item item in itemSetting.itemList)
         {
             float itemY = startY - (itemCountMap.Count * (buttonSize + spacing) + gap);
 
@@ -109,7 +95,7 @@ public class PurchaseSystem : MonoBehaviour
         // 초기화
         totalPrice = 0;
         
-        foreach (Item item in itemSetting.items)
+        foreach (Item item in itemSetting.itemList)
         {
             ItemUI itemUI = FindItemUI(item); //각 아이템을 담고있는 UI를 불러옴
 

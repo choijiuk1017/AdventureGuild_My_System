@@ -49,6 +49,7 @@ public class DayCycle : MonoBehaviour
             {
                 if (daysSinceLastEvent == eventInterval)
                 {
+                    Debug.Log("이벤트 발생");
                     eventSystem.TriggerRandomEvent();
                     eventDay = day;
                 }
@@ -58,6 +59,7 @@ public class DayCycle : MonoBehaviour
             {
                if(maxDay[month-1] - eventDay + day == eventInterval)
                {
+                    Debug.Log("이벤트 발생");
                     eventSystem.TriggerRandomEvent();
                     eventDay = day;
                }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility.Data;
+
 
 //아이템의 가격을 관리하는 스크립트
 public class ItemSetting : MonoBehaviour
@@ -9,35 +11,66 @@ public class ItemSetting : MonoBehaviour
     public delegate void PriceChangedEventHandler();
     public static event PriceChangedEventHandler OnPriceChanged;
 
-    public DataParser dataParser;
+    private Dictionary<int, Item> itemData;
+    [SerializeField]
+    private List<Item> debugData;
 
-    public Item[] items;
+    private const string itemDataTableName = "Item_Master";
+
+    private const string itemID = "Item_ID";
+    private const string itemName = "Item_Name";
+    private const string itemNameUI = "Item_Name_UI";
+    private const string itemIcon = "Item_Icon";
+    private const string itemText = "Item_Text";
+    private const string itemPriceDef = "Item_Price_Def";
+    private const string itemPriceMin = "Item_Price_Min";
+    private const string itemPriceMax = "Item_Price_Max";
+
+    public List<Item> itemList;
 
 
     //Item에 대한 정보를 받으며 시작함
     void Start()
     {
-        GameObject dataParserObject = GameObject.Find("DataParser");
-        
-        if (dataParserObject != null)
+        InitItemData();
+    }
+
+    private void InitItemData()
+    {
+        itemData = new Dictionary<int, Item>();
+        debugData = new();
+
+        var items = DataParser.Parser(itemDataTableName);
+
+        foreach (var item in items)
         {
-            dataParser = dataParserObject.GetComponent<DataParser>();
-            if (dataParser != null)
+            var iData = new Item()
             {
-                //아이템 리스트 받아옴
-                items = dataParser.List2Array<Item>(dataParser.items);
-            }
-            else
-            {
-                Debug.LogError("DataParser 컴포넌트를 찾을 수 없습니다.");
-            }
+                Item_ID = DataParser.IntParse(item[itemID]),
+                Item_Name = item[itemName].ToString(),
+                Item_Name_UI = item[itemNameUI].ToString(),
+                Item_Icon = item[itemIcon].ToString(),
+                Item_Text = item[itemText].ToString(),
+                Item_Price_Def = DataParser.FloatParse(item[itemPriceDef]),
+                Item_Price_Min = DataParser.FloatParse(item[itemPriceMin]),
+                Item_Price_Max = DataParser.FloatParse(item[itemPriceMax])
+            };
+
+            debugData.Add(iData);
+            itemData.Add(iData.Item_ID, iData);
         }
+        itemList = debugData;
+    }
+
+    public Item GetItemData(int itemID)
+    {
+        return itemData[itemID];
     }
     
     //가격 변동 함수, EventSystem 스크립트에서 사용함
     public void ChangePrices(float factor, int itemID)
     {
-        foreach (Item item in items)
+        foreach (Item item in itemList)
         {
             if (item.Item_ID == itemID)
             {
