@@ -1,0 +1,4 @@
+﻿Quest_ID,Quest_Name,Quest_Rank,Quest_Type,Quest_Text,Target_Type,Target_ID,Quest_Rate_Min,Quest_Rate_Max,Quest_Rate_Inc
+1,슬라임을 퇴치하자,C,1,슬라임이 문제네. 슬라임을 퇴치해주게.,1,1,10,100,10
+100,재료를 구해오자,B,2,마을 진료소에 슬라임의 점액이 다 떨어졌는데. 대량으로 구해줄 분을 모집합니다.,2,1,10,50,10
+1000,드래곤을 잡자,A,3,왕국을 위협하는 드래곤을 처치해주게,1,2,10,10,0
