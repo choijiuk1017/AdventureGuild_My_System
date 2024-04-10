@@ -8,15 +8,16 @@ namespace Core.Building.Temple
 {
     public class Temple : Building
     {
-        public bool usingTemple = false;
 
         public Transform templeInside;
         public Transform main;
 
+        public int currentAdventure = 0;
+        public int maxAdventure = 3;
+
         // Start is called before the first frame update
         void Start()
         {
-            Debug.Log("adsafa");
             Init(2);
         }
 
@@ -43,19 +44,19 @@ namespace Core.Building.Temple
             BuildingMouseClick();
         }
 
-        //서커스 사용 부분
+        //신전 사용 부분
         private IEnumerator TempleTime(GameObject adventurePosition)
         {
-            usingTemple = true;
+            adventureInside = true;
 
             PerformActionBasedOnBuildingType(buildingData.buildingType, buildingData.buildingValue);
 
             yield return new WaitForSeconds(buildingData.buildingTime);
 
-            Debug.Log("모험가 퇴장");
-
+            Debug.Log("모험가 신전 퇴장");
+            currentAdventure--;
             adventurePosition.transform.position = main.transform.position;
-            usingTemple = false;
+            adventureInside = false;
 
 
         }
@@ -63,10 +64,10 @@ namespace Core.Building.Temple
 
         private void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.CompareTag("Adventure") )
+            if (col.CompareTag("Adventure") && currentAdventure <= maxAdventure)
             {
-
-                Debug.Log("모험가 입장");
+                currentAdventure++;
+                Debug.Log("모험가 신전 입장");
                 col.transform.position = templeInside.transform.position;
 
                 StartCoroutine(TempleTime(col.gameObject));

@@ -11,6 +11,9 @@ namespace Core.Building
 
         public BuildingData buildingData;
 
+        [SerializeField]
+        protected bool adventureInside = false;
+
         private void Awake()
         {
             mainCamera = Camera.main;
@@ -67,6 +70,7 @@ namespace Core.Building
             Debug.Log("월급 지급: " + salary);
         }
 
+        //스텟 증감
         public void PerformActionBasedOnBuildingType(int buildingType, int buildingValue)
         {
             switch (buildingType)

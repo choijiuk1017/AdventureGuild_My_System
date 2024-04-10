@@ -13,8 +13,6 @@ namespace Core.Building.Circus
         public int maxTickets = 3;
         public int currentTickets = 0;
 
-        public bool usingCircus = false;
-
         public Transform circusInside;
         public Transform main;
    
@@ -58,7 +56,7 @@ namespace Core.Building.Circus
         //서커스 사용 부분
         private IEnumerator CircusTime(GameObject adventurePosition)
         {
-            usingCircus = true;
+            adventureInside = true;
 
             PerformActionBasedOnBuildingType(buildingData.buildingType, buildingData.buildingValue);
 
@@ -67,7 +65,7 @@ namespace Core.Building.Circus
             Debug.Log("모험가 퇴장");
 
             adventurePosition.transform.position = main.transform.position;
-            usingCircus = false;
+            adventureInside = false;
 
             
 
@@ -84,7 +82,7 @@ namespace Core.Building.Circus
             if (col.CompareTag("Adventure") && currentTickets > 0)
             {
                 currentTickets--;
-                Debug.Log("모험가 입장");
+                Debug.Log("모험가 서커스 입장");
                 col.transform.position = circusInside.transform.position;
 
                 StartCoroutine(CircusTime(col.gameObject));
