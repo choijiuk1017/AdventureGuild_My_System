@@ -14,7 +14,7 @@ namespace Core.Building.Inn
 
         void Start()
         {
-            Init(4);
+            Init(5);
         }
 
         public override void BuildingMouseClick()
@@ -44,7 +44,7 @@ namespace Core.Building.Inn
 
             yield return new WaitForSeconds(7f);
 
-            Debug.Log("모험가 주점 퇴장");
+            Debug.Log("모험가 주점 퇴장"); 
 
             adventure.transform.position = main.transform.position;
 
