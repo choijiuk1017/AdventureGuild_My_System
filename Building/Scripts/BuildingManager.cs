@@ -66,14 +66,31 @@ namespace Core.Manager
         }
 
         public BuildingData GetBuildingData(int buildingID)
-        {
-            Debug.Log("정보 이동 " + buildingData[buildingID].buildingName);
-            
+        {           
             return buildingData[buildingID];
         }
 
+        public List<BuildingData> GetBuildingList()
+        {
+            return buildingList;
+        }
 
-        
+
+        [Serializable]
+        public class BuildingData
+        {
+            public int buildingID;
+            public string buildingKoreanName;
+            public string buildingName;
+            public int buildingType;
+            public int buildingValue;
+            public int buildingRound;
+            public int buildingTime;
+            public int buildingGold;
+            public int buildingCost;
+            public int buildingTax;
+            public int buildingSalary;
+        }
     }
 
     

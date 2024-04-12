@@ -62,7 +62,7 @@ namespace Core.Building.Circus
 
             yield return new WaitForSeconds(buildingData.buildingTime);
 
-            Debug.Log("모험가 퇴장");
+            Debug.Log("모험가 서커스 퇴장");
 
             adventurePosition.transform.position = main.transform.position;
             adventureInside = false;

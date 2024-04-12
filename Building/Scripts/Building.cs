@@ -9,7 +9,7 @@ namespace Core.Building
     {
         protected Camera mainCamera;
 
-        public BuildingData buildingData;
+        public BuildingManager.BuildingData buildingData;
 
         [SerializeField]
         protected bool adventureInside = false;
@@ -17,8 +17,6 @@ namespace Core.Building
         private void Awake()
         {
             mainCamera = Camera.main;
-
-
         }
 
 
