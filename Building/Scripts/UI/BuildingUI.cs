@@ -45,7 +45,8 @@ namespace Core.UI
 
             if (building != null)
             {
-                building.GetComponent<SpriteRenderer>().enabled = true;
+                building.GetComponent<SpriteRenderer>().enabled = true; 
+                building.GetComponent<BoxCollider2D>().enabled = true;
             }
             else
             {

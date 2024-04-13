@@ -53,6 +53,11 @@ namespace Core.UI
                 buildingUI.SetUpUI(building);
             }
         }
+
+        public void ExitButton()
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
 

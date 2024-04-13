@@ -141,9 +141,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 109d819b64dcddb40955264fe3789b18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  willingness: 0
-  hp: 0
-  mp: 0
+  willingness: 100
+  maxWillingness: 100
+  currentHp: 2000
+  maxHp: 3000
+  currentMp: 2000
+  maxMp: 3000
+  money: 10000
+  equipmentValue: 10
+  equipmentDurability: 60
+  maxEquipmentDurability: 100
+  isCompleteRequest: 0
+  isInBuilding: 0
+  destination: {fileID: 0}
+  moveSpeed: 5
 --- !u!1 &3326465004120723631
 GameObject:
   m_ObjectHideFlags: 0
