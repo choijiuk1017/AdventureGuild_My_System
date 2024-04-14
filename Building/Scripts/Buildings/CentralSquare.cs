@@ -49,6 +49,8 @@ namespace Core.Building.CentralSquare
 
             adventure.transform.position = main.transform.position;
 
+            adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+
             adventureInside = false;
 
         }

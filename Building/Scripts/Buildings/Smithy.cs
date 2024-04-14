@@ -64,6 +64,8 @@ namespace Core.Building.Smithy
 
             adventure.transform.position = main.transform.position;
 
+            adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+
             adventureInside = false;
    
         }

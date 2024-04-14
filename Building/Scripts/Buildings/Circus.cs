@@ -65,6 +65,8 @@ namespace Core.Building.Circus
             Debug.Log("모험가 서커스 퇴장");
 
             adventurePosition.transform.position = main.transform.position;
+
+            adventurePosition.GetComponent<TestingAdventure>().isInBuilding = false;
             adventureInside = false;
 
             

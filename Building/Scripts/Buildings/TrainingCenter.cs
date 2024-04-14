@@ -50,6 +50,8 @@ namespace Core.Building.TrainingCenter
 
             adventure.transform.position = main.transform.position;
 
+            adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+
             adventureInside = false;
 
         }

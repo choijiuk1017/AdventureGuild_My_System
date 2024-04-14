@@ -28,7 +28,7 @@ public class TestingAdventure : MonoBehaviour
 
     public Vector2 destination; // 목적지
 
-    public float moveSpeed = 5f; // 이동 속도
+    public int moveSpeed = 5; // 이동 속도
 
     private bool isMoving = false; // 이동 중인지 여부
 
@@ -62,7 +62,15 @@ public class TestingAdventure : MonoBehaviour
     {
         if (!isMoving)
         {
+            isMoving = true;
             StartCoroutine(Thinking());
+        }
+
+        if (isInBuilding == true)
+        {
+            // 건물에 있으면 이동을 멈춘다.
+            destination = transform.position;
+
         }
     }
 
@@ -73,153 +81,91 @@ public class TestingAdventure : MonoBehaviour
             yield return new WaitForSeconds(30f); 
             willingness -= 10; // 의지 감소
         }
+
+        
     }
 
 
 
     private IEnumerator Thinking()
     {
-        isMoving = true;
 
-        if(currentHp < maxHp | currentMp < maxMp)
+        if (!isInBuilding)
         {
-            destination = FindBuilding("Temple").transform.position;
-
-        }
-
-        if(willingness < maxWillingness)
-        {
-            destination = FindBuilding("Circus").transform.position;
-        }
-
-        int numRemainingBuildings = remainingBuildingIndices.Count;
-
-        if(numRemainingBuildings > 0)
-        {
-            int randomIndex = Random.Range(0, numRemainingBuildings);
-            int selectedBuildingIndex = remainingBuildingIndices[randomIndex];
-            
-
-            switch (selectedBuildingIndex)
+            if (currentHp < maxHp | currentMp < maxMp)
             {
-                case 0:
-                    destination = FindBuilding("Smithy").transform.position;
+                destination = FindBuilding("Temple").transform.position;
+            }
 
-                    if (destination == null)
-                    {
-                        StartCoroutine(Thinking());
-                    }
-                    remainingBuildingIndices.RemoveAt(randomIndex);
-                    
-                    break;
+            if (willingness < maxWillingness)
+            {
+                destination = FindBuilding("Circus").transform.position;
+            }
 
-                case 1:
-                    destination = FindBuilding("Inn").transform.position;
+            int numRemainingBuildings = remainingBuildingIndices.Count;
 
-                    if (destination == null)
-                    {
-                        StartCoroutine(Thinking());
-                    }
-                    else
-                    {
-                        remainingBuildingIndices.RemoveAt(randomIndex);
-                    }
-                    
-                    break;
+            if (numRemainingBuildings > 0)
+            {
+                int randomIndex = Random.Range(0, numRemainingBuildings);
+                int selectedBuildingIndex = remainingBuildingIndices[randomIndex];
 
-                case 2:
-                    destination = FindBuilding("PotionMarket").transform.position;
+                switch (selectedBuildingIndex)
+                {
+                    case 0:
+                        destination = FindBuilding("Smithy").transform.position;
+                        break;
+                    case 1:
+                        destination = FindBuilding("Inn").transform.position;
+                        break;
+                    case 2:
+                        destination = FindBuilding("PotionMarket").transform.position;
+                        break;
+                    case 3:
+                        destination = FindBuilding("TrainingCenter").transform.position;
+                        break;
+                    case 4:
+                        destination = FindBuilding("Library").transform.position;
+                        break;
+                    case 5:
+                        destination = FindBuilding("Central Square").transform.position;
+                        break;
+                    default:
+                        Debug.LogError("Invalid random building index!");
+                        break;
+                }
 
-                    if (destination == null)
-                    {
-                        StartCoroutine(Thinking());
-                    }
-                    else
-                    {
-                        remainingBuildingIndices.RemoveAt(randomIndex);
-                    }
-
-                    break;
-
-                case 3:
-                    destination = FindBuilding("TrainingCenter").transform.position;
-
-                    if (destination == null)
-                    {
-                        StartCoroutine(Thinking());
-                    }
-                    else
-                    {
-                        remainingBuildingIndices.RemoveAt(randomIndex);
-                    }
-
-                    break;
-
-                case 4:
-                    destination = FindBuilding("Library").transform.position;
-
-                    if (destination == null)
-                    {
-                        StartCoroutine(Thinking());
-                    }
-                    else
-                    {
-                        remainingBuildingIndices.RemoveAt(randomIndex);
-                    }
-
-                    break;
-
-                case 5:
-                    destination = FindBuilding("Central Square").transform.position;
-
-                    if (destination == null)
-                    {
-                        StartCoroutine(Thinking());
-                    }
-                    else
-                    {
-                        remainingBuildingIndices.RemoveAt(randomIndex);
-                    }
-
-                    break;
-
-                default:
-                    Debug.LogError("Invalid random building index!");
-                    break;
-
+                remainingBuildingIndices.RemoveAt(randomIndex);
+            }
+            else
+            {
+                remainingBuildingIndices = new List<int> { 0, 1, 2, 3, 4, 5 };
             }
         }
-        else 
+
+        while (Vector2.Distance(transform.position, destination) > 0.1f)
         {
-            remainingBuildingIndices = new List<int> { 0, 1, 2, 3, 4, 5 };
+            MoveToBuilidng(destination);
+            yield return null;
         }
-        
 
-        MoveToBuilidng(destination);
-
-        yield return new WaitForSeconds(2f);
-
-        
+        isMoving = false;
     }
 
     public void MoveToBuilidng(Vector2 destination)
     {
         if (destination != null)
         {
-            Vector2 direction = new Vector2(destination.x - transform.position.x, destination.y - transform.position.y).normalized;
+            Vector2 direction = (destination - (Vector2)transform.position).normalized;
 
-            rigid.velocity = direction * moveSpeed * Time.deltaTime;
-
-           
+            rigid.MovePosition(rigid.position + direction * moveSpeed * Time.deltaTime);
         }
         else
         {
-            Debug.Log("시발");
+            Debug.Log("Destination is null");
         }
-        
+
     }
 
-    // 특정 위치로 이동하는 함수
     public GameObject FindBuilding(string buildingName)
     {
         GameObject findBuilding = GameObject.Find(buildingName);
@@ -236,10 +182,9 @@ public class TestingAdventure : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.CompareTag("Building"))
+        if (col.CompareTag("Building"))
         {
             isInBuilding = true;
-            isMoving = false;
         }
     }
 }

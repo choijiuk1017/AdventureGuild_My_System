@@ -49,6 +49,8 @@ namespace Core.Building.PotionMarket
             Debug.Log("모험가 포션 상점 퇴장");
 
             adventure.transform.position = main.transform.position;
+            adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+
 
             adventureInside = false;
 

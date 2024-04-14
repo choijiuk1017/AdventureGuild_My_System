@@ -3634,8 +3634,16 @@ PrefabInstance:
       value: TestingAdventure
       objectReference: {fileID: 0}
     - target: {fileID: 3040247557842463806, guid: a13b2b652969b0548bf70811e1588728, type: 3}
+      propertyPath: currentHp
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 3040247557842463806, guid: a13b2b652969b0548bf70811e1588728, type: 3}
+      propertyPath: currentMp
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 3040247557842463806, guid: a13b2b652969b0548bf70811e1588728, type: 3}
       propertyPath: moveSpeed
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3040247557842463806, guid: a13b2b652969b0548bf70811e1588728, type: 3}
       propertyPath: destination
@@ -3647,11 +3655,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7064326967909775425, guid: a13b2b652969b0548bf70811e1588728, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.24
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7064326967909775425, guid: a13b2b652969b0548bf70811e1588728, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.77
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7064326967909775425, guid: a13b2b652969b0548bf70811e1588728, type: 3}
       propertyPath: m_LocalPosition.z

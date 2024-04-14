@@ -56,6 +56,8 @@ namespace Core.Building.Temple
             Debug.Log("모험가 신전 퇴장");
             currentAdventure--;
             adventurePosition.transform.position = main.transform.position;
+
+            adventurePosition.GetComponent<TestingAdventure>().isInBuilding = false;
             adventureInside = false;
 
 
