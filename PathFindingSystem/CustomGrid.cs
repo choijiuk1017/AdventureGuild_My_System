@@ -6,7 +6,7 @@ public class CustomGrid : MonoBehaviour
 {
     public bool displayGridGizmos;
 
-    public Transform main;
+    public GameObject[] main;
 
     // 장애물 레이어
     public LayerMask OBSTACLE;
@@ -33,13 +33,12 @@ public class CustomGrid : MonoBehaviour
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
+        main = GameObject.FindGameObjectsWithTag("Adventure");
         // 격자 생성
         CreateGrid();
-
-        main = FindAnyObjectByType<TestingAdventure>().transform;
     }
 
-   
+    
 
     // Scene view 출력용 기즈모.
     private void OnDrawGizmos()
@@ -47,22 +46,25 @@ public class CustomGrid : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, new Vector2(gridWorldSize.x, gridWorldSize.y));
         if (grid != null)
         {
-            Node mainNode = NodeFromWorldPoint(main.position);
-            foreach (Node n in grid)
+            foreach (GameObject adventure in main)
             {
-                Gizmos.color = (n.walkable) ? new Color(1, 1, 1, 0.3f) : new Color(1, 0, 0, 0.3f);
-                if (n.walkable == false)
+                Node mainNode = NodeFromWorldPoint(adventure.transform.position);
+                foreach (Node n in grid)
+                {
+                    Gizmos.color = (n.walkable) ? new Color(1, 1, 1, 0.3f) : new Color(1, 0, 0, 0.3f);
+                    if (n.walkable == false)
 
-                    if (path != null)
-                    {
-                        if (path.Contains(n))
+                        if (path != null)
                         {
-                            Gizmos.color = new Color(0, 0, 0, 0.3f);
-                            Debug.Log("?");
+                            if (path.Contains(n))
+                            {
+                                Gizmos.color = new Color(0, 0, 0, 0.3f);
+                                Debug.Log("?");
+                            }
                         }
-                    }
-                if (mainNode == n) Gizmos.color = new Color(0, 1, 1, 0.3f);
-                Gizmos.DrawCube(n.worldPosition, Vector2.one * (nodeDiameter - 0.1f));
+                    if (mainNode == n) Gizmos.color = new Color(0, 1, 1, 0.3f);
+                    Gizmos.DrawCube(n.worldPosition, Vector2.one * (nodeDiameter - 0.1f));
+                }
             }
         }
     }
