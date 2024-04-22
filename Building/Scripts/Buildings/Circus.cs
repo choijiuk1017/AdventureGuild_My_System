@@ -13,37 +13,13 @@ namespace Core.Building.Circus
         public int maxTickets = 3;
         public int currentTickets = 0;
 
-        public Transform circusInside;
-        public Transform main;
+        public Transform circusEntrance;
    
         // Start is called before the first frame update
-        void Start()
+        new void Start()
         {
             Init(1);
             DayCycle.OnDayChanged += HandleDayChanged;
-        }
-
-
-
-        public override void BuildingMouseClick()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-                // Ray가 충돌한 Collider2D가 있다면
-                if (hit.collider != null && hit.collider.name == "Circus")
-                {
-                    MoveCamera(circusInside.transform.position);
-                }
-            }
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            BuildingMouseClick();
         }
 
         void AddRandomTickets()
@@ -54,19 +30,22 @@ namespace Core.Building.Circus
         }
 
         //서커스 사용 부분
-        private IEnumerator CircusTime(GameObject adventurePosition)
+        private IEnumerator CircusTime(GameObject adventure)
         {
             adventureInside = true;
 
-            PerformActionBasedOnBuildingType(buildingData.buildingType, buildingData.buildingValue);
+            //PerformActionBasedOnBuildingType(buildingData.buildingType, buildingData.buildingValue);
 
             yield return new WaitForSeconds(buildingData.buildingTime);
 
             Debug.Log("모험가 서커스 퇴장");
 
-            adventurePosition.transform.position = main.transform.position;
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Adventure"));
 
-            adventurePosition.GetComponent<TestingAdventure>().isInBuilding = false;
+            adventure.transform.position = circusEntrance.position;
+
+            adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+            adventure.GetComponent<TestingAdventure>().isSetDestination = false;
             adventureInside = false;
 
             
@@ -85,7 +64,8 @@ namespace Core.Building.Circus
             {
                 currentTickets--;
                 Debug.Log("모험가 서커스 입장");
-                col.transform.position = circusInside.transform.position;
+
+                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
 
                 StartCoroutine(CircusTime(col.gameObject));
 

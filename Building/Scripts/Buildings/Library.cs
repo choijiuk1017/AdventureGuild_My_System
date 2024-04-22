@@ -8,36 +8,15 @@ namespace Core.Building.Library
 {
     public class Library : Building
     {
-        public Transform libraryInside;
-        public Transform main;
+        public Transform libraryEntrance;
 
 
         // Start is called before the first frame update
-        void Start()
+        new void Start()
         {
             Init(7);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            BuildingMouseClick();
-        }
-
-        public override void BuildingMouseClick()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-                // Ray가 충돌한 Collider2D가 있다면
-                if (hit.collider != null && hit.collider.name == "Library")
-                {
-                    MoveCamera(libraryInside.transform.position);
-                }
-            }
-        }
 
         protected IEnumerator HandlingAdventure(GameObject adventure)
         {
@@ -47,9 +26,12 @@ namespace Core.Building.Library
 
             Debug.Log("모험가 도서관 퇴장");
 
-            adventure.transform.position = main.transform.position;
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Adventure"));
+            adventure.transform.position = libraryEntrance.position;
+
 
             adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+            adventure.GetComponent<TestingAdventure>().isSetDestination = false;
 
             adventureInside = false;
 
@@ -61,7 +43,8 @@ namespace Core.Building.Library
             if (col.CompareTag("Adventure"))
             {
                 Debug.Log("모험가 도서관 입장");
-                col.transform.position = libraryInside.transform.position;
+
+                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
 
                 StartCoroutine(HandlingAdventure(col.gameObject));
             }

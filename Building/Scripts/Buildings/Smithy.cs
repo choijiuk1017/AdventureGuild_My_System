@@ -11,35 +11,15 @@ namespace Core.Building.Smithy
     public class Smithy : Building
     {
 
-        public Transform smithyInside;
-        public Transform main;
+        public Transform smithyEntrance;
 
         // Start is called before the first frame update
-        void Start()
+        new void Start()
         {
             Init(3);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            BuildingMouseClick();
-        }
 
-        public override void BuildingMouseClick()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-                // Ray가 충돌한 Collider2D가 있다면
-                if (hit.collider != null && hit.collider.name == "Smithy")
-                {
-                    MoveCamera(smithyInside.transform.position);
-                }
-            }
-        }
 
         private void PurchaseEquipment()
         {
@@ -59,12 +39,16 @@ namespace Core.Building.Smithy
             RepairEquipment();
 
             yield return new WaitForSeconds(7f);
+            adventure.transform.position = smithyEntrance.position;
 
             Debug.Log("모험가 대장간 퇴장");
 
-            adventure.transform.position = main.transform.position;
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Adventure"));
+
 
             adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+
+            adventure.GetComponent<TestingAdventure>().isSetDestination = false;
 
             adventureInside = false;
    
@@ -76,9 +60,9 @@ namespace Core.Building.Smithy
             {
                 Debug.Log("모험가 대장간 입장");
 
-                col.transform.position = smithyInside.transform.position;
+                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
 
-               StartCoroutine(HandlingAdventure(col.gameObject));
+                StartCoroutine(HandlingAdventure(col.gameObject));
             }
         }
     }

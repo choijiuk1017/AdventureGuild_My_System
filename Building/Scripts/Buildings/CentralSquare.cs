@@ -9,47 +9,27 @@ namespace Core.Building.CentralSquare
     public class CentralSquare : Building
     {
 
-        public Transform centralSquareInside;
-        public Transform main;
+        public Transform centralSquareEntrance;
 
         // Start is called before the first frame update
-        void Start()
+        new void Start()
         {
             Init(8);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            BuildingMouseClick();
-        }
-
-        public override void BuildingMouseClick()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-                // Ray가 충돌한 Collider2D가 있다면
-                if (hit.collider != null && hit.collider.name == "CentralSquare")
-                {
-                    MoveCamera(centralSquareInside.transform.position);
-                }
-            }
         }
 
         protected IEnumerator HandlingAdventure(GameObject adventure)
         {
             adventureInside = true;
 
-            yield return new WaitForSeconds(7f);
+           yield return new WaitForSeconds(7f);
 
-            Debug.Log("모험가 도서관 퇴장");
+            Debug.Log("모험가 중앙 광장 퇴장");
 
-            adventure.transform.position = main.transform.position;
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Adventure"));
+            adventure.transform.position = centralSquareEntrance.position;
 
             adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+            adventure.GetComponent<TestingAdventure>().isSetDestination = false;
 
             adventureInside = false;
 
@@ -60,8 +40,9 @@ namespace Core.Building.CentralSquare
         {
             if (col.CompareTag("Adventure"))
             {
-                Debug.Log("모험가 도서관 입장");
-                col.transform.position = centralSquareInside.transform.position;
+                Debug.Log("모험가 중앙광장 입장");
+
+                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
 
                 StartCoroutine(HandlingAdventure(col.gameObject));
             }

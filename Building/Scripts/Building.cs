@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Unit;
+using Core.Guild;
 using Core.Manager;
 
 namespace Core.Building
 {
-    public class Building : MonoBehaviour
+    public class Building : GuildEntity
     {
         protected Camera mainCamera;
 
@@ -17,6 +19,21 @@ namespace Core.Building
         private void Awake()
         {
             mainCamera = Camera.main;
+        }
+
+        protected override void InitEntity()
+        {
+
+        }
+
+        public override void OnInteraction(Adventure adventureEntity)
+        {
+
+        }
+
+        public override void EndInteraction()
+        {
+
         }
 
 
@@ -36,29 +53,6 @@ namespace Core.Building
             }
         }
 
-        //건물 마우스 클릭 시
-        public virtual void BuildingMouseClick()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-                // Ray가 충돌한 Collider2D가 있다면
-                if (hit.collider != null && hit.collider == this)
-                {
-                    MoveCamera(new Vector2 (0,0));
-                }
-            }
-        }
-
-
-        //카메라 이동 함수
-        protected void MoveCamera(Vector2 targetPosition)
-        {
-            mainCamera.transform.position = targetPosition;
-        }
-
         public void CollectTax(int tax)
         {
             Debug.Log("세금 징수: " + tax);
@@ -69,17 +63,17 @@ namespace Core.Building
         }
 
         //스텟 증감
-        public void PerformActionBasedOnBuildingType(int buildingType, int buildingValue)
+        public void PerformActionBasedOnBuildingType(GameObject adventure, int buildingType, int buildingValue)
         {
             switch (buildingType)
             {
                 case 1:
                     // Building_Type이 1인 경우, 의지를 회복하는 기능 수행
-                    RestoreWillingness(buildingValue);
+                    RestoreWillingness(adventure, buildingValue);
                     break;
                 case 2:
                     // Building_Type이 2인 경우, 체력과 마나를 회복하는 기능 수행
-                    RestoreHPAndMP(buildingValue);
+                    RestoreHPAndMP(adventure, buildingValue);
                     break;
                 // 다른 Building_Type에 대한 처리 추가
                 default:
@@ -88,14 +82,28 @@ namespace Core.Building
             }
         }
 
-        private void RestoreWillingness(int value)
+        private void RestoreWillingness(GameObject adventure, int value)
         {
             Debug.Log("의지를 회복합니다: " + value);
         }
 
-        private void RestoreHPAndMP(int value)
+        private void RestoreHPAndMP(GameObject adventure, int value)
         {
+            adventure.GetComponent<Adventure>().AdventureInfo.AdventureStat.curHp += value;
+            adventure.GetComponent<Adventure>().AdventureInfo.AdventureStat.curMp += value;
             Debug.Log("체력과 마나를 회복합니다: " + value);
+        }
+
+        public void SetLayerRecursively(GameObject obj, int newLayer)
+        {
+            if (obj == null)
+                return;
+
+            obj.layer = newLayer;
+            foreach (Transform child in obj.transform)
+            {
+                SetLayerRecursively(child.gameObject, newLayer);
+            }
         }
 
     }

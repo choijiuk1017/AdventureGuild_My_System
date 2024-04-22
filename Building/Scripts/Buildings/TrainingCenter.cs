@@ -9,48 +9,28 @@ namespace Core.Building.TrainingCenter
     public class TrainingCenter : Building
     {
 
-        public Transform trainingCenterInside;
-        public Transform main;
+        public Transform trainingEntrance;
+
+
         // Start is called before the first frame update
-        void Start()
+        new void Start()
         {
             Init(6);
-        }
-
-        public override void BuildingMouseClick()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-                // Ray가 충돌한 Collider2D가 있다면
-                if (hit.collider != null && hit.collider.name == "TrainingCenter")
-                {
-                    MoveCamera(trainingCenterInside.transform.position);
-                }
-
-            }
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            BuildingMouseClick();
         }
 
         protected IEnumerator HandlingAdventure(GameObject adventure)
         {
             adventureInside = true;
 
-
             yield return new WaitForSeconds(7f);
 
             Debug.Log("모험가 훈련소 퇴장");
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Adventure"));
 
-            adventure.transform.position = main.transform.position;
+            adventure.transform.position = trainingEntrance.position;
 
             adventure.GetComponent<TestingAdventure>().isInBuilding = false;
+            adventure.GetComponent<TestingAdventure>().isSetDestination = false;
 
             adventureInside = false;
 
@@ -62,7 +42,8 @@ namespace Core.Building.TrainingCenter
             if (col.CompareTag("Adventure"))
             {
                 Debug.Log("모험가 훈련소 입장");
-                col.transform.position = trainingCenterInside.transform.position;
+
+                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
 
                 StartCoroutine(HandlingAdventure(col.gameObject));
             }
