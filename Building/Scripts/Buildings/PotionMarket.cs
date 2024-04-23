@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Unit;
+using Core.Guild;
 using Core.Manager;
 
 namespace Core.Building.PotionMarket
@@ -16,11 +18,27 @@ namespace Core.Building.PotionMarket
             Init(5);
         }
 
+        protected override void InitEntity()
+        {
+            GuildManager.Instance.AddGuildEntity(GuildEntityType.Entrance, this);
+        }
 
-        protected IEnumerator HandlingAdventure(GameObject adventure)
+        public override void OnInteraction(Adventure adventureEntity)
+        {
+            StartCoroutine(UsingPotionMarket(adventureEntity.gameObject));
+        }
+
+        public override void EndInteraction()
+        {
+
+        }
+
+
+        protected IEnumerator UsingPotionMarket(GameObject adventure)
         {
             adventureInside = true;
 
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
             yield return new WaitForSeconds(7f);
 
@@ -36,19 +54,6 @@ namespace Core.Building.PotionMarket
 
             adventureInside = false;
 
-        }
-
-
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.CompareTag("Adventure"))
-            {
-                Debug.Log("모험가 포션 상점 입장");
-
-                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
-
-                StartCoroutine(HandlingAdventure(col.gameObject));
-            }
         }
 
     }

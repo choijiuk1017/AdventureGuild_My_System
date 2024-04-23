@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Unit;
+using Core.Guild;
 using Core.Manager;
 
 namespace Core.Building.TrainingCenter
@@ -18,9 +20,28 @@ namespace Core.Building.TrainingCenter
             Init(6);
         }
 
-        protected IEnumerator HandlingAdventure(GameObject adventure)
+        protected override void InitEntity()
+        {
+            GuildManager.Instance.AddGuildEntity(GuildEntityType.Entrance, this);
+        }
+
+        public override void OnInteraction(Adventure adventureEntity)
+        {
+            StartCoroutine(UsingTrainingCenter(adventureEntity.gameObject));
+        }
+
+        public override void EndInteraction()
+        {
+
+        }
+
+        protected IEnumerator UsingTrainingCenter(GameObject adventure)
         {
             adventureInside = true;
+
+
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
+
 
             yield return new WaitForSeconds(7f);
 
@@ -35,21 +56,6 @@ namespace Core.Building.TrainingCenter
             adventureInside = false;
 
         }
-
-
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.CompareTag("Adventure"))
-            {
-                Debug.Log("모험가 훈련소 입장");
-
-                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
-
-                StartCoroutine(HandlingAdventure(col.gameObject));
-            }
-        }
     }
-
-
 }
 

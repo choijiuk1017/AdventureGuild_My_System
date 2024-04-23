@@ -45,6 +45,8 @@ namespace Core.Building.Temple
         //신전 사용 부분
         private IEnumerator UsingTemple(GameObject adventure)
         {
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
+
             adventureInside = true;
 
             PerformActionBasedOnBuildingType(adventure, buildingData.buildingType, buildingData.buildingValue);
@@ -62,23 +64,8 @@ namespace Core.Building.Temple
             currentAdventure--;
 
             adventureInside = false;
-
-
         }
 
-
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.CompareTag("Adventure") && currentAdventure <= maxAdventure)
-            {
-                currentAdventure++;
-                Debug.Log("모험가 신전 입장");
-
-                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
-
-                //StartCoroutine(TempleTime(col.gameObject));
-            }
-        }
     }
 
 }

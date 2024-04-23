@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Unit;
+using Core.Guild;
 using Core.Manager;
 
 
@@ -19,6 +21,20 @@ namespace Core.Building.Smithy
             Init(3);
         }
 
+        protected override void InitEntity()
+        {
+            GuildManager.Instance.AddGuildEntity(GuildEntityType.Entrance, this);
+        }
+
+        public override void OnInteraction(Adventure adventureEntity)
+        {
+            StartCoroutine(UsingSmithy(adventureEntity.gameObject));
+        }
+
+        public override void EndInteraction()
+        {
+
+        }
 
 
         private void PurchaseEquipment()
@@ -31,14 +47,17 @@ namespace Core.Building.Smithy
             Debug.Log("장비 수리");
         }
 
-        protected IEnumerator HandlingAdventure(GameObject adventure)
+        protected IEnumerator UsingSmithy(GameObject adventure)
         {
             adventureInside = true;
+
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
             PurchaseEquipment();
             RepairEquipment();
 
             yield return new WaitForSeconds(7f);
+
             adventure.transform.position = smithyEntrance.position;
 
             Debug.Log("모험가 대장간 퇴장");
@@ -54,17 +73,6 @@ namespace Core.Building.Smithy
    
         }
 
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.CompareTag("Adventure"))
-            {
-                Debug.Log("모험가 대장간 입장");
-
-                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
-
-                StartCoroutine(HandlingAdventure(col.gameObject));
-            }
-        }
     }
 
 }

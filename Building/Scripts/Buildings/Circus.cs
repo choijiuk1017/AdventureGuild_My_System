@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Unit;
+using Core.Guild;
 using Core.Manager;
 
 
@@ -22,6 +24,24 @@ namespace Core.Building.Circus
             DayCycle.OnDayChanged += HandleDayChanged;
         }
 
+        protected override void InitEntity()
+        {
+            GuildManager.Instance.AddGuildEntity(GuildEntityType.Entrance, this);
+        }
+
+        public override void OnInteraction(Adventure adventureEntity)
+        {
+            if (currentTickets > 0)
+            {
+                StartCoroutine(UsingCircus(adventureEntity.gameObject));
+            }
+        }
+
+        public override void EndInteraction()
+        {
+
+        }
+
         void AddRandomTickets()
         {
             int randomTickets = UnityEngine.Random.Range(1, 4); // 1에서 3 사이의 랜덤한 티켓 수
@@ -30,11 +50,15 @@ namespace Core.Building.Circus
         }
 
         //서커스 사용 부분
-        private IEnumerator CircusTime(GameObject adventure)
+        private IEnumerator UsingCircus(GameObject adventure)
         {
             adventureInside = true;
 
-            //PerformActionBasedOnBuildingType(buildingData.buildingType, buildingData.buildingValue);
+            currentTickets--;
+
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
+
+            PerformActionBasedOnBuildingType(adventure, buildingData.buildingType, buildingData.buildingValue);
 
             yield return new WaitForSeconds(buildingData.buildingTime);
 
@@ -58,20 +82,6 @@ namespace Core.Building.Circus
 
         }
 
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.CompareTag("Adventure") && currentTickets > 0)
-            {
-                currentTickets--;
-                Debug.Log("모험가 서커스 입장");
-
-                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
-
-                StartCoroutine(CircusTime(col.gameObject));
-
-                
-            }
-        }
 
         //가격 변동에 따른 이벤트 함수
         private void OnDestroy()

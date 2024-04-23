@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Unit;
+using Core.Guild;
 using Core.Manager;
 
 namespace Core.Building.Inn
@@ -16,9 +18,26 @@ namespace Core.Building.Inn
             Init(5);
         }
 
-        protected IEnumerator HandlingAdventure(GameObject adventure)
+        protected override void InitEntity()
+        {
+            GuildManager.Instance.AddGuildEntity(GuildEntityType.Entrance, this);
+        }
+
+        public override void OnInteraction(Adventure adventureEntity)
+        {
+            StartCoroutine(UsingInn(adventureEntity.gameObject));
+        }
+
+        public override void EndInteraction()
+        {
+
+        }
+
+        protected IEnumerator UsingInn(GameObject adventure)
         {
             adventureInside = true;
+
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
             yield return new WaitForSeconds(7f);
 
@@ -35,21 +54,6 @@ namespace Core.Building.Inn
 
         }
 
-
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.CompareTag("Adventure"))
-            {
-
-                Debug.Log("모험가 주점 입장");
-
-                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
-
-                StartCoroutine(HandlingAdventure(col.gameObject));
-
-
-            }
-        }
     }
 }
 

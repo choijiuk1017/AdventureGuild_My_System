@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Unit;
+using Core.Guild;
 using Core.Manager;
 
 namespace Core.Building.CentralSquare
@@ -16,12 +18,29 @@ namespace Core.Building.CentralSquare
         {
             Init(8);
         }
+        protected override void InitEntity()
+        {
+            GuildManager.Instance.AddGuildEntity(GuildEntityType.Entrance, this);
+        }
 
-        protected IEnumerator HandlingAdventure(GameObject adventure)
+        public override void OnInteraction(Adventure adventureEntity)
+        {
+            StartCoroutine(UsingCentralSquare(adventureEntity.gameObject));
+        }
+
+        public override void EndInteraction()
+        {
+
+        }
+
+
+        protected IEnumerator UsingCentralSquare(GameObject adventure)
         {
             adventureInside = true;
 
-           yield return new WaitForSeconds(7f);
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
+
+            yield return new WaitForSeconds(7f);
 
             Debug.Log("¸ðÇè°¡ Áß¾Ó ±¤Àå ÅðÀå");
 
@@ -35,18 +54,6 @@ namespace Core.Building.CentralSquare
 
         }
 
-
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.CompareTag("Adventure"))
-            {
-                Debug.Log("¸ðÇè°¡ Áß¾Ó±¤Àå ÀÔÀå");
-
-                SetLayerRecursively(col.gameObject, LayerMask.NameToLayer("Invisible"));
-
-                StartCoroutine(HandlingAdventure(col.gameObject));
-            }
-        }
     }
 }
 
