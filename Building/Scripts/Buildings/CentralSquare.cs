@@ -18,6 +18,7 @@ namespace Core.Building.CentralSquare
         {
             Init(8);
         }
+
         protected override void InitEntity()
         {
             GuildManager.Instance.AddGuildEntity(GuildEntityType.Entrance, this);
@@ -32,7 +33,6 @@ namespace Core.Building.CentralSquare
         {
 
         }
-
 
         protected IEnumerator UsingCentralSquare(GameObject adventure)
         {
@@ -51,6 +51,11 @@ namespace Core.Building.CentralSquare
             adventure.GetComponent<TestingAdventure>().isSetDestination = false;
 
             adventureInside = false;
+
+        }
+
+        private void MatchingParty()
+        {
 
         }
 

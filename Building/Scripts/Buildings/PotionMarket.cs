@@ -12,6 +12,8 @@ namespace Core.Building.PotionMarket
     {
         public Transform potionMarketEntrance;
 
+        public List<string> potionOptions = new List<string> {"체력 포션", "마나 포션", "신속 포션"};
+
         // Start is called before the first frame update
         new void Start()
         {
@@ -40,6 +42,10 @@ namespace Core.Building.PotionMarket
 
             SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
+            string chosenPotion = ChooseRandomPotion();
+            Debug.Log(adventure.GetComponent<Adventure>().AdventureInfo.AdventureName + "이(가) 선택한 음식: " + chosenPotion);
+            PurchasePotion(chosenPotion);
+
             yield return new WaitForSeconds(7f);
 
             Debug.Log("모험가 포션 상점 퇴장");
@@ -54,6 +60,17 @@ namespace Core.Building.PotionMarket
 
             adventureInside = false;
 
+        }
+
+        private string ChooseRandomPotion()
+        {
+            int randomIndex = UnityEngine.Random.Range(0, potionOptions.Count);
+            return potionOptions[randomIndex];
+        }
+
+        private void PurchasePotion(string potion)
+        {
+            Debug.Log("모험가가 " + potion+ "를(을) 구입했습니다.");
         }
 
     }

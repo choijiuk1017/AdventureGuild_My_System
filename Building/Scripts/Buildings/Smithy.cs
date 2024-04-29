@@ -15,6 +15,8 @@ namespace Core.Building.Smithy
 
         public Transform smithyEntrance;
 
+        public List<string> equipmentOptions = new List<string> {"갑옷", "철 검", "철 방패"};  
+
         // Start is called before the first frame update
         new void Start()
         {
@@ -36,10 +38,15 @@ namespace Core.Building.Smithy
 
         }
 
-
-        private void PurchaseEquipment()
+        private string ChooseRandomEquipment()
         {
-            Debug.Log("장비 구매");
+            int randomIndex = UnityEngine.Random.Range(0, equipmentOptions.Count);
+            return equipmentOptions[randomIndex];
+        }
+
+        private void PurchaseEquipment(string equipment)
+        {
+            Debug.Log("모험가가 " + equipment + "를(을) 구매했습니다.");
         }
 
         private void RepairEquipment()
@@ -53,7 +60,10 @@ namespace Core.Building.Smithy
 
             SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
-            PurchaseEquipment();
+            string chosenEquipment = ChooseRandomEquipment();
+            Debug.Log(adventure.GetComponent<Adventure>().AdventureInfo.AdventureName + "이(가) 선택한 음식: " + chosenEquipment);
+            PurchaseEquipment(chosenEquipment);
+
             RepairEquipment();
 
             yield return new WaitForSeconds(7f);

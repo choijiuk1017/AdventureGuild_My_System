@@ -45,15 +45,16 @@ namespace Core.Building.Temple
         //신전 사용 부분
         private IEnumerator UsingTemple(GameObject adventure)
         {
-            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
             adventureInside = true;
 
-            PerformActionBasedOnBuildingType(adventure, buildingData.buildingType, buildingData.buildingValue);
+            SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
-            var delayTime = buildingData.buildingTime;
+            var delayTime = buildingData.buildingTime * 60;
 
             yield return new WaitForSeconds(delayTime);
+
+            PerformActionBasedOnBuildingType(adventure, buildingData.buildingType, buildingData.buildingValue);
 
             Debug.Log("모험가 신전 퇴장");
 

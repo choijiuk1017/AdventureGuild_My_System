@@ -39,7 +39,11 @@ namespace Core.Building.Library
 
             SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
-            yield return new WaitForSeconds(7f);
+            var delayTime = buildingData.buildingTime * 60;
+
+            yield return new WaitForSeconds(delayTime);
+
+            UpgradeSkill();
 
             Debug.Log("모험가 도서관 퇴장");
 
@@ -52,6 +56,11 @@ namespace Core.Building.Library
 
             adventureInside = false;
 
+        }
+
+        private void UpgradeSkill()
+        {
+            Debug.Log("스킬 강화");
         }
     }
 

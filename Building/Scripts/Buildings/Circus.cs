@@ -58,9 +58,11 @@ namespace Core.Building.Circus
 
             SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
-            PerformActionBasedOnBuildingType(adventure, buildingData.buildingType, buildingData.buildingValue);
+            var delayTime = buildingData.buildingTime * 60;
 
-            yield return new WaitForSeconds(buildingData.buildingTime);
+            yield return new WaitForSeconds(delayTime);
+
+            PerformActionBasedOnBuildingType(adventure, buildingData.buildingType, buildingData.buildingValue);
 
             Debug.Log("모험가 서커스 퇴장");
 

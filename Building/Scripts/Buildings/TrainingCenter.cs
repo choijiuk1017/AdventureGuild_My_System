@@ -42,8 +42,11 @@ namespace Core.Building.TrainingCenter
 
             SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
+            var delayTime = buildingData.buildingTime * 60;
 
-            yield return new WaitForSeconds(7f);
+            yield return new WaitForSeconds(delayTime);
+
+            UpgradeSkill();
 
             Debug.Log("모험가 훈련소 퇴장");
             SetLayerRecursively(adventure, LayerMask.NameToLayer("Adventure"));
@@ -55,6 +58,11 @@ namespace Core.Building.TrainingCenter
 
             adventureInside = false;
 
+        }
+
+        private void UpgradeSkill()
+        {
+            Debug.Log("스킬 강화");
         }
     }
 }
