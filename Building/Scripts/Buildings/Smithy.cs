@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Core.Unit;
+using Core.Item;
 using Core.Guild;
 using Core.Manager;
 
@@ -15,12 +16,14 @@ namespace Core.Building.Smithy
 
         public Transform smithyEntrance;
 
-        public List<string> equipmentOptions = new List<string> {"갑옷", "철 검", "철 방패"};  
+        public List<string> equipmentOptions = new List<string> {"갑옷", "철 검", "철 방패"};
 
+        public Inventory inventory;
         // Start is called before the first frame update
         new void Start()
         {
             Init(3);
+
         }
 
         protected override void InitEntity()
@@ -38,21 +41,18 @@ namespace Core.Building.Smithy
 
         }
 
-        private string ChooseRandomEquipment()
+        private void CraftEquipment(/*string bluePrint, string ore, string miscellaneous*/)
         {
-            int randomIndex = UnityEngine.Random.Range(0, equipmentOptions.Count);
-            return equipmentOptions[randomIndex];
+            //아이템 조건 확인
+            Debug.Log("장비 제작");
         }
 
-        private void PurchaseEquipment(string equipment)
+        private void EnhanceEquipment(/*string equipment, int stoneCount*/)
         {
-            Debug.Log("모험가가 " + equipment + "를(을) 구매했습니다.");
+            //아이템 조건 확인
+            Debug.Log("장비 강화");
         }
-
-        private void RepairEquipment()
-        {
-            Debug.Log("장비 수리");
-        }
+    
 
         protected IEnumerator UsingSmithy(GameObject adventure)
         {
@@ -60,11 +60,8 @@ namespace Core.Building.Smithy
 
             SetLayerRecursively(adventure, LayerMask.NameToLayer("Invisible"));
 
-            string chosenEquipment = ChooseRandomEquipment();
-            Debug.Log(adventure.GetComponent<Adventure>().AdventureInfo.AdventureName + "이(가) 선택한 음식: " + chosenEquipment);
-            PurchaseEquipment(chosenEquipment);
-
-            RepairEquipment();
+            CraftEquipment();
+            EnhanceEquipment();
 
             yield return new WaitForSeconds(7f);
 
